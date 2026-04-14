@@ -1,0 +1,324 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #14141c;
+  --surface-2: #1c1c28;
+  --border: #2a2a3a;
+  --border-hover: #3a3a50;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.15);
+  --accent-glow-strong: rgba(99, 102, 241, 0.3);
+  --text: #e2e2ef;
+  --text-muted: #7a7a90;
+  --green: #34d399;
+  --green-bg: rgba(52, 211, 153, 0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(99, 102, 241, 0.08),
+    transparent
+  );
+}
+
+#app {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #e2e2ef 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2.5rem;
+}
+
+/* ---------- Config ---------- */
+.config {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.config .field {
+  flex: 1;
+}
+
+.config .field:last-child {
+  flex: 0 0 180px;
+}
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+textarea,
+select {
+  width: 100%;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+select {
+  cursor: pointer;
+}
+
+/* ---------- Drop zone ---------- */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: default;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+  background: var(--surface);
+  position: relative;
+}
+
+.drop-zone:hover {
+  border-color: var(--border-hover);
+}
+
+.drop-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow:
+    0 0 0 4px var(--accent-glow),
+    inset 0 0 30px var(--accent-glow);
+}
+
+.drop-zone__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.drop-zone__icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+.drop-zone p {
+  margin-bottom: 0.15rem;
+  font-size: 0.95rem;
+}
+
+.drop-zone .small {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.85rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 2;
+}
+
+button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-glow-strong);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button.secondary {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+button.secondary:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: var(--surface-2);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+/* ---------- Status ---------- */
+.status-bar {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--green);
+  background: var(--green-bg);
+  border: 1px solid rgba(52, 211, 153, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+}
+
+/* ---------- Preview ---------- */
+.preview-section {
+  margin-top: 1.75rem;
+}
+
+.preview-section h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preview-section h2 small {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+#preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  font-family: "Fira Code", "Cascadia Code", "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  max-height: 420px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--text-muted);
+}
+
+#preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+#preview::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#preview::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ---------- Actions ---------- */
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.actions button:first-child {
+  flex: 1;
+}
+
+/* ---------- Utility ---------- */
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  #app {
+    padding: 2rem 1rem 3rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .config {
+    flex-direction: column;
+  }
+  .config .field:last-child {
+    flex: 1;
+  }
+  .buttons {
+    flex-direction: column;
+  }
+  .actions {
+    flex-direction: column;
+  }
+}

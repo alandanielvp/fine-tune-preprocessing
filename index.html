@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fine-Tune Preprocessor</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Fine-Tune Preprocessor</h1>
+      <p class="subtitle">Upload WhatsApp chat exports &rarr; OpenAI JSONL</p>
+
+      <!-- Config -->
+      <section class="config">
+        <div class="field">
+          <label for="systemPrompt">System Prompt</label>
+          <textarea
+            id="systemPrompt"
+            rows="3"
+            placeholder="e.g. Eres un asistente amable y servicial..."
+          >
+Eres la asistente virtual de una clínica médica. Atiendes pacientes por WhatsApp: agendar, reagendar, cancelar y confirmar citas. Habla de forma natural y profesional.</textarea
+          >
+        </div>
+        <div class="field">
+          <label for="firstRole">First speaker role</label>
+          <select id="firstRole">
+            <option value="assistant" selected>assistant</option>
+            <option value="user">user</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Upload zone -->
+      <section id="dropZone" class="drop-zone">
+        <div class="drop-zone__inner">
+          <div class="drop-zone__icon">&#128193;</div>
+          <p>
+            Drag &amp; drop a <strong>folder</strong> or
+            <strong>.txt files</strong> here
+          </p>
+          <p class="small">— or —</p>
+          <div class="buttons">
+            <button id="btnPickFolder" type="button">
+              &#128194; Pick Folder
+            </button>
+            <button id="btnPickFiles" type="button">
+              &#128196; Pick Files
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Status -->
+      <section id="statusBar" class="status-bar hidden">
+        <span id="fileCount">0</span> files loaded &middot;
+        <span id="sampleCount">0</span> samples generated
+      </section>
+
+      <!-- Preview -->
+      <section class="preview-section hidden" id="previewSection">
+        <h2>Preview <small>(first 5 samples)</small></h2>
+        <pre id="preview"></pre>
+      </section>
+
+      <!-- Actions -->
+      <section class="actions hidden" id="actionsSection">
+        <button id="btnDownload" type="button">Download .jsonl</button>
+        <button id="btnClear" type="button" class="secondary">Clear</button>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
