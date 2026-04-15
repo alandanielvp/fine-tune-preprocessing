@@ -20,6 +20,8 @@ const btnDownload = $<HTMLButtonElement>("#btnDownload");
 const btnClear = $<HTMLButtonElement>("#btnClear");
 const systemPrompt = $<HTMLTextAreaElement>("#systemPrompt");
 const firstRole = $<HTMLSelectElement>("#firstRole");
+const filterEmojis = $<HTMLInputElement>("#filterEmojis");
+const emojiLabel = $<HTMLElement>("#emojiLabel");
 const statusBar = $<HTMLElement>("#statusBar");
 const fileCountEl = $<HTMLElement>("#fileCount");
 const sampleCountEl = $<HTMLElement>("#sampleCount");
@@ -103,7 +105,11 @@ function processAll() {
   // Process each file individually
   perFileResults = loadedTexts.map((t) => ({
     name: t.name.replace(/\.txt$/i, ".jsonl"),
-    samples: convertChats(t.content, role, prompt),
+    samples: convertChats(t.content, {
+      firstRole: role,
+      systemPrompt: prompt,
+      filterEmojis: filterEmojis.checked,
+    }),
   }));
   totalSamples = perFileResults.reduce((sum, r) => sum + r.samples.length, 0);
 
@@ -264,6 +270,10 @@ systemPrompt.addEventListener("input", () => {
   if (loadedTexts.length) processAll();
 });
 firstRole.addEventListener("change", () => {
+  if (loadedTexts.length) processAll();
+});
+filterEmojis.addEventListener("change", () => {
+  emojiLabel.textContent = filterEmojis.checked ? "On" : "Off";
   if (loadedTexts.length) processAll();
 });
 
