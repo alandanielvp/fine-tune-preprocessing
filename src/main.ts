@@ -58,12 +58,21 @@ function processAll() {
   sampleCountEl.textContent = String(samples.length);
   show(statusBar, previewSection, actionsSection);
 
-  // Preview first 5
-  const preview = samples
-    .slice(0, 5)
-    .map((s) => JSON.stringify(s))
-    .join("\n");
-  previewEl.textContent = preview || "(no valid samples generated)";
+  // Preview first 5 (truncate long content for performance)
+  const MAX_PREVIEW = 5;
+  const MAX_CHARS_PER_SAMPLE = 500;
+  const previewLines = samples.slice(0, MAX_PREVIEW).map((s) => {
+    const json = JSON.stringify(s);
+    return json.length > MAX_CHARS_PER_SAMPLE
+      ? json.slice(0, MAX_CHARS_PER_SAMPLE) + " …"
+      : json;
+  });
+  const suffix =
+    samples.length > MAX_PREVIEW
+      ? `\n\n… and ${samples.length - MAX_PREVIEW} more samples`
+      : "";
+  previewEl.textContent =
+    previewLines.join("\n") + suffix || "(no valid samples generated)";
 }
 
 function downloadJsonl() {
