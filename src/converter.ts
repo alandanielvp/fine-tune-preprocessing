@@ -47,10 +47,7 @@ export function convertChats(
   return texts.flatMap((text) => convertSingleChat(text, options));
 }
 
-function convertSingleChat(
-  text: string,
-  options: ConvertOptions,
-): Sample[] {
+function convertSingleChat(text: string, options: ConvertOptions): Sample[] {
   const { firstRole, systemPrompt, filterEmojis = true } = options;
   // Parse lines into { sender, content } objects
   const LINE_RE =
@@ -101,21 +98,10 @@ function convertSingleChat(
     content: filterEmojis ? stripEmojis(m.content.trim()) : m.content.trim(),
   }));
 
-  // Merge consecutive same-role messages with \n
-  const merged = [{ ...withRoles[0] }];
-  for (let i = 1; i < withRoles.length; i++) {
-    const prev = merged[merged.length - 1];
-    if (withRoles[i].role === prev.role) {
-      prev.content += "\n" + withRoles[i].content;
-    } else {
-      merged.push({ ...withRoles[i] });
-    }
-  }
-
   // Need at least one assistant and one user message
   if (
-    !merged.some((m) => m.role === "assistant") ||
-    !merged.some((m) => m.role === "user")
+    !withRoles.some((m) => m.role === "assistant") ||
+    !withRoles.some((m) => m.role === "user")
   ) {
     return [];
   }
@@ -124,7 +110,7 @@ function convertSingleChat(
   const messages: Message[] = [];
   if (systemPrompt)
     messages.push({ role: "system", content: systemPrompt, weight: 0 });
-  for (const m of merged) {
+  for (const m of withRoles) {
     const entry: Message = {
       role: m.role,
       content: m.content,

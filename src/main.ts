@@ -214,7 +214,9 @@ async function resolveDroppedFiles(e: DragEvent): Promise<File[]> {
       if (entry.isFile) {
         allFiles.push(await entryToFile(entry as FileSystemFileEntry));
       } else if (entry.isDirectory) {
-        allFiles.push(...(await readDirectory(entry as FileSystemDirectoryEntry)));
+        allFiles.push(
+          ...(await readDirectory(entry as FileSystemDirectoryEntry)),
+        );
       }
     }
   } else if (e.dataTransfer?.files) {
@@ -235,17 +237,15 @@ function attachPickerButton(
     input.style.display = "none";
     document.body.appendChild(input);
     input.addEventListener("change", () => {
-      if (input.files && input.files.length > 0) handler(Array.from(input.files));
+      if (input.files && input.files.length > 0)
+        handler(Array.from(input.files));
       input.remove();
     });
     input.click();
   });
 }
 
-function attachDropZone(
-  zone: HTMLElement,
-  handler: (files: File[]) => void,
-) {
+function attachDropZone(zone: HTMLElement, handler: (files: File[]) => void) {
   zone.addEventListener("dragover", (e) => {
     e.preventDefault();
     zone.classList.add("dragover");
@@ -263,8 +263,14 @@ function attachDropZone(
 
 // ── Convert mode events ──────────────────────────────────
 attachDropZone(dropZone, (files) => readTxtFiles(files));
-attachPickerButton(btnPickFolder, createFolderInput, (files) => readTxtFiles(files));
-attachPickerButton(btnPickFiles, () => createFileInput(".txt"), (files) => readTxtFiles(files));
+attachPickerButton(btnPickFolder, createFolderInput, (files) =>
+  readTxtFiles(files),
+);
+attachPickerButton(
+  btnPickFiles,
+  () => createFileInput(".txt"),
+  (files) => readTxtFiles(files),
+);
 
 systemPrompt.addEventListener("input", () => {
   if (loadedTexts.length) processAll();
@@ -305,9 +311,11 @@ async function readJsonlFiles(files: File[]) {
   // Preview first 5 lines
   const MAX_PREVIEW = 5;
   const MAX_CHARS = 500;
-  const previewLines = mergedLines.slice(0, MAX_PREVIEW).map((line) =>
-    line.length > MAX_CHARS ? line.slice(0, MAX_CHARS) + " …" : line,
-  );
+  const previewLines = mergedLines
+    .slice(0, MAX_PREVIEW)
+    .map((line) =>
+      line.length > MAX_CHARS ? line.slice(0, MAX_CHARS) + " …" : line,
+    );
   const suffix =
     mergedLines.length > MAX_PREVIEW
       ? `\n\n… and ${mergedLines.length - MAX_PREVIEW} more lines`
@@ -318,7 +326,9 @@ async function readJsonlFiles(files: File[]) {
 
 function downloadMergedJsonl() {
   if (mergedLines.length === 0) return;
-  const blob = new Blob([mergedLines.join("\n")], { type: "application/jsonl" });
+  const blob = new Blob([mergedLines.join("\n")], {
+    type: "application/jsonl",
+  });
   downloadBlob(blob, "merged.jsonl");
 }
 
@@ -330,7 +340,11 @@ function clearMerge() {
 
 // ── Merge mode events ────────────────────────────────────
 attachDropZone(mergeDropZone, (files) => readJsonlFiles(files));
-attachPickerButton(btnPickJsonl, () => createFileInput(".jsonl"), (files) => readJsonlFiles(files));
+attachPickerButton(
+  btnPickJsonl,
+  () => createFileInput(".jsonl"),
+  (files) => readJsonlFiles(files),
+);
 
 btnMergeDownload.addEventListener("click", downloadMergedJsonl);
 btnMergeClear.addEventListener("click", clearMerge);
