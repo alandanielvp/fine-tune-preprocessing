@@ -65,7 +65,52 @@ h1 {
 .subtitle {
   color: var(--text-muted);
   font-size: 0.95rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Mode tabs ---------- */
+.mode-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.mode-tabs .tab {
+  flex: 1;
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-radius: 0;
+  padding: 0.7rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  position: relative;
+}
+
+.mode-tabs .tab:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.mode-tabs .tab:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  transform: none;
+  box-shadow: none;
+}
+
+.mode-tabs .tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.mode-tabs .tab.active:hover {
+  background: var(--accent-hover);
 }
 
 /* ---------- Config ---------- */

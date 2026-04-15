@@ -10,64 +10,111 @@
       <h1>Fine-Tune Preprocessor</h1>
       <p class="subtitle">Upload WhatsApp chat exports &rarr; OpenAI JSONL</p>
 
-      <!-- Config -->
-      <section class="config">
-        <div class="field">
-          <label for="systemPrompt">System Prompt</label>
-          <textarea
-            id="systemPrompt"
-            rows="3"
-            placeholder="e.g. Eres un asistente amable y servicial..."
-          >
+      <!-- Mode tabs -->
+      <nav class="mode-tabs">
+        <button id="tabConvert" class="tab active" type="button">Convert .txt &rarr; .jsonl</button>
+        <button id="tabMerge" class="tab" type="button">Merge .jsonl files</button>
+      </nav>
+
+      <!-- ═══════ CONVERT MODE ═══════ -->
+      <div id="convertMode">
+        <!-- Config -->
+        <section class="config">
+          <div class="field">
+            <label for="systemPrompt">System Prompt</label>
+            <textarea
+              id="systemPrompt"
+              rows="3"
+              placeholder="e.g. Eres un asistente amable y servicial..."
+            >
 Eres un asistente virtual que atiende clientes por WhatsApp. Respondes de forma breve, natural y cálida, como una persona real. No recetas medicamentos ni das diagnósticos.</textarea
-          >
-        </div>
-        <div class="field">
-          <label for="firstRole">First speaker role</label>
-          <select id="firstRole">
-            <option value="assistant" selected>assistant</option>
-            <option value="user">user</option>
-          </select>
-        </div>
-      </section>
-
-      <!-- Upload zone -->
-      <section id="dropZone" class="drop-zone">
-        <div class="drop-zone__inner">
-          <div class="drop-zone__icon">&#128193;</div>
-          <p>
-            Drag &amp; drop a <strong>folder</strong> or
-            <strong>.txt files</strong> here
-          </p>
-          <p class="small">— or —</p>
-          <div class="buttons">
-            <button id="btnPickFolder" type="button">
-              &#128194; Pick Folder
-            </button>
-            <button id="btnPickFiles" type="button">
-              &#128196; Pick Files
-            </button>
+            >
           </div>
-        </div>
-      </section>
+          <div class="field">
+            <label for="firstRole">First speaker role</label>
+            <select id="firstRole">
+              <option value="assistant" selected>assistant</option>
+              <option value="user">user</option>
+            </select>
+          </div>
+        </section>
 
-      <!-- Status -->
-      <section id="statusBar" class="status-bar hidden">
-        <span id="fileCount">0</span> files loaded &middot;
-        <span id="sampleCount">0</span> samples generated
-      </section>
+        <!-- Upload zone -->
+        <section id="dropZone" class="drop-zone">
+          <div class="drop-zone__inner">
+            <div class="drop-zone__icon">&#128193;</div>
+            <p>
+              Drag &amp; drop a <strong>folder</strong> or
+              <strong>.txt files</strong> here
+            </p>
+            <p class="small">Each .txt &rarr; its own .jsonl file</p>
+            <p class="small">&mdash; or &mdash;</p>
+            <div class="buttons">
+              <button id="btnPickFolder" type="button">
+                &#128194; Pick Folder
+              </button>
+              <button id="btnPickFiles" type="button">
+                &#128196; Pick Files
+              </button>
+            </div>
+          </div>
+        </section>
 
-      <!-- Preview -->
-      <section class="preview-section hidden" id="previewSection">
-        <h2>Preview <small>(first 5 samples)</small></h2>
-        <pre id="preview"></pre>
-      </section>
+        <!-- Status -->
+        <section id="statusBar" class="status-bar hidden">
+          <span id="fileCount">0</span> files loaded &middot;
+          <span id="sampleCount">0</span> samples generated
+        </section>
 
-      <!-- Actions -->
-      <section class="actions hidden" id="actionsSection">
-        <button id="btnDownload" type="button">Download .jsonl</button>
-        <button id="btnClear" type="button" class="secondary">Clear</button>
-      </section>
+        <!-- Preview -->
+        <section class="preview-section hidden" id="previewSection">
+          <h2>Preview <small>(first 5 samples)</small></h2>
+          <pre id="preview"></pre>
+        </section>
+
+        <!-- Actions -->
+        <section class="actions hidden" id="actionsSection">
+          <button id="btnDownload" type="button">Download .jsonl files</button>
+          <button id="btnClear" type="button" class="secondary">Clear</button>
+        </section>
+      </div>
+
+      <!-- ═══════ MERGE MODE ═══════ -->
+      <div id="mergeMode" class="hidden">
+        <section id="mergeDropZone" class="drop-zone">
+          <div class="drop-zone__inner">
+            <div class="drop-zone__icon">&#128203;</div>
+            <p>
+              Drag &amp; drop <strong>.jsonl files</strong> here
+            </p>
+            <p class="small">They will be merged into a single file</p>
+            <p class="small">&mdash; or &mdash;</p>
+            <div class="buttons">
+              <button id="btnPickJsonl" type="button">
+                &#128196; Pick .jsonl Files
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Merge Status -->
+        <section id="mergeStatusBar" class="status-bar hidden">
+          <span id="mergeFileCount">0</span> files loaded &middot;
+          <span id="mergeLineCount">0</span> total lines
+        </section>
+
+        <!-- Merge Preview -->
+        <section class="preview-section hidden" id="mergePreviewSection">
+          <h2>Preview <small>(first 5 lines)</small></h2>
+          <pre id="mergePreview"></pre>
+        </section>
+
+        <!-- Merge Actions -->
+        <section class="actions hidden" id="mergeActionsSection">
+          <button id="btnMergeDownload" type="button">Download merged .jsonl</button>
+          <button id="btnMergeClear" type="button" class="secondary">Clear</button>
+        </section>
+      </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>
