@@ -110,7 +110,57 @@ Eres un asistente virtual que atiende clientes por WhatsApp. Respondes de forma 
         <!-- Merge Status -->
         <section id="mergeStatusBar" class="status-bar hidden">
           <span id="mergeFileCount">0</span> files loaded &middot;
-          <span id="mergeLineCount">0</span> total lines
+          <span id="mergeLineCount">0</span> total lines &middot;
+          <span id="mergeTokenCount">0</span> tokens
+        </section>
+
+        <!-- Token Stats -->
+        <section id="tokenStatsSection" class="token-stats hidden">
+          <h2>Token Stats</h2>
+          <div class="token-grid">
+            <div class="token-card">
+              <span class="token-card__label">Total Tokens</span>
+              <span class="token-card__value" id="totalTokensDisplay">0</span>
+            </div>
+            <div class="token-card">
+              <span class="token-card__label">Conversations</span>
+              <span class="token-card__value" id="totalConversations">0</span>
+            </div>
+            <div class="token-card">
+              <span class="token-card__label">Avg Tokens / Conv</span>
+              <span class="token-card__value" id="avgTokensDisplay">0</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cost Calculator -->
+        <section id="costSection" class="cost-calculator hidden">
+          <h2>Cost Estimate</h2>
+          <div class="cost-fields">
+            <div class="field">
+              <label for="pricePerMillion"
+                >Price per 1M training tokens ($)</label
+              >
+              <input
+                type="number"
+                id="pricePerMillion"
+                value="3.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="field">
+              <label for="epochs">Epochs</label>
+              <input type="number" id="epochs" value="3" min="1" step="1" />
+            </div>
+          </div>
+          <div class="cost-result">
+            <span>Estimated cost:</span>
+            <strong id="costDisplay">$0.00</strong>
+          </div>
+          <p class="cost-formula">
+            Cost = (tokens &times; epochs &times; price) / 1,000,000
+          </p>
         </section>
 
         <!-- Merge Preview -->

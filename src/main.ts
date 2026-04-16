@@ -1,6 +1,7 @@
 import "./style.css";
 import { convertChats } from "./converter";
 import type { Sample } from "./converter";
+import { countTokens, estimateCost } from "./counter";
 
 // ── DOM refs ──────────────────────────────────────────────
 const $ = <T extends HTMLElement>(sel: string) =>
@@ -41,6 +42,17 @@ const mergeActionsSection = $<HTMLElement>("#mergeActionsSection");
 const btnMergeDownload = $<HTMLButtonElement>("#btnMergeDownload");
 const btnMergeClear = $<HTMLButtonElement>("#btnMergeClear");
 
+// Token stats & cost calculator
+const tokenStatsSection = $<HTMLElement>("#tokenStatsSection");
+const costSection = $<HTMLElement>("#costSection");
+const mergeTokenCountEl = $<HTMLElement>("#mergeTokenCount");
+const totalTokensDisplay = $<HTMLElement>("#totalTokensDisplay");
+const totalConversations = $<HTMLElement>("#totalConversations");
+const avgTokensDisplay = $<HTMLElement>("#avgTokensDisplay");
+const pricePerMillion = $<HTMLInputElement>("#pricePerMillion");
+const epochsInput = $<HTMLInputElement>("#epochs");
+const costDisplay = $<HTMLElement>("#costDisplay");
+
 // ── State ─────────────────────────────────────────────────
 // Convert state: one result per txt file
 let loadedTexts: { name: string; content: string }[] = [];
@@ -49,6 +61,7 @@ let totalSamples = 0;
 
 // Merge state
 let mergedLines: string[] = [];
+let currentTotalTokens = 0;
 
 // ── Helpers ───────────────────────────────────────────────
 function show(...els: HTMLElement[]) {
@@ -303,10 +316,29 @@ async function readJsonlFiles(files: File[]) {
     c.split(/\r?\n/).filter((line) => line.trim().length > 0),
   );
 
+  // Count tokens
+  const stats = countTokens(mergedLines);
+  currentTotalTokens = stats.totalTokens;
+  const avg =
+    mergedLines.length > 0
+      ? Math.round(stats.totalTokens / mergedLines.length)
+      : 0;
+
   // Update UI
   mergeFileCountEl.textContent = String(jsonlFiles.length);
   mergeLineCountEl.textContent = String(mergedLines.length);
-  show(mergeStatusBar, mergePreviewSection, mergeActionsSection);
+  mergeTokenCountEl.textContent = stats.totalTokens.toLocaleString();
+  totalTokensDisplay.textContent = stats.totalTokens.toLocaleString();
+  totalConversations.textContent = String(mergedLines.length);
+  avgTokensDisplay.textContent = String(avg);
+  updateCost();
+  show(
+    mergeStatusBar,
+    mergePreviewSection,
+    mergeActionsSection,
+    tokenStatsSection,
+    costSection,
+  );
 
   // Preview first 5 lines
   const MAX_PREVIEW = 5;
@@ -334,8 +366,22 @@ function downloadMergedJsonl() {
 
 function clearMerge() {
   mergedLines = [];
-  hide(mergeStatusBar, mergePreviewSection, mergeActionsSection);
+  currentTotalTokens = 0;
+  hide(
+    mergeStatusBar,
+    mergePreviewSection,
+    mergeActionsSection,
+    tokenStatsSection,
+    costSection,
+  );
   mergePreviewEl.textContent = "";
+}
+
+function updateCost() {
+  const price = parseFloat(pricePerMillion.value) || 0;
+  const epochs = parseInt(epochsInput.value) || 3;
+  const cost = estimateCost(currentTotalTokens, epochs, price);
+  costDisplay.textContent = `$${cost.toFixed(2)}`;
 }
 
 // ── Merge mode events ────────────────────────────────────
@@ -348,3 +394,5 @@ attachPickerButton(
 
 btnMergeDownload.addEventListener("click", downloadMergedJsonl);
 btnMergeClear.addEventListener("click", clearMerge);
+pricePerMillion.addEventListener("input", updateCost);
+epochsInput.addEventListener("input", updateCost);
