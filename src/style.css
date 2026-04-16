@@ -361,7 +361,8 @@ button.secondary:hover {
   font-size: 0.8rem;
 }
 
-#preview {
+#preview,
+#mergePreview {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -376,15 +377,18 @@ button.secondary:hover {
   color: var(--text-muted);
 }
 
-#preview::-webkit-scrollbar {
+#preview::-webkit-scrollbar,
+#mergePreview::-webkit-scrollbar {
   width: 6px;
 }
 
-#preview::-webkit-scrollbar-track {
+#preview::-webkit-scrollbar-track,
+#mergePreview::-webkit-scrollbar-track {
   background: transparent;
 }
 
-#preview::-webkit-scrollbar-thumb {
+#preview::-webkit-scrollbar-thumb,
+#mergePreview::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
 }
