@@ -50,16 +50,25 @@ export function convertChats(
 function convertSingleChat(text: string, options: ConvertOptions): Sample[] {
   const { firstRole, systemPrompt, filterEmojis = true } = options;
   // Parse lines into { sender, content } objects
+  // Supports two WhatsApp export formats:
+  //   Format A (dash):    "14/04/26, 12:35 p.m. - Sender: msg"
+  //   Format B (bracket): "[14/04/26, 12:35:05 p.m.] Sender: msg"
   const LINE_RE =
-    /^(\d{1,2}\/\d{1,2}\/\d{2,4})[,\s]+\d{1,2}:\d{2}(?::\d{2})?\s*(?:a\.\s*m\.|p\.\s*m\.|[AaPp]\.?\s*[Mm]\.?)?\s*-\s+/;
+    /^\[?(\d{1,2}\/\d{1,2}\/\d{2,4})[,\s]+\d{1,2}:\d{2}(?::\d{2})?\s*(?:a\.\s*m\.|p\.\s*m\.|[AaPp]\.?\s*[Mm]\.?)?\s*(?:\]\s+|-\s+)/;
   const SKIP = [
     /<multimedia omitido>/i,
     /<media omitted>/i,
     /se eliminó este mensaje/i,
     /this message was deleted/i,
+    /los mensajes y las llamadas están cifrados de extremo a extremo/i,
+    /messages and calls are end-to-end encrypted/i,
   ];
 
-  const clean = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+  // Strip BOM and zero-width / left-to-right mark characters
+  const clean = (text.charCodeAt(0) === 0xfeff ? text.slice(1) : text).replace(
+    /[\u200E\u200F\u200B\u200C\u200D\uFEFF]/g,
+    "",
+  );
   const lines = clean.split(/\r?\n/);
   const parsed: ParsedLine[] = [];
   let current: ParsedLine | null = null;
@@ -75,7 +84,7 @@ function convertSingleChat(text: string, options: ConvertOptions): Sample[] {
         continue;
       } // WA system msg (no sender), skip
       current = {
-        sender: rest.slice(0, colonIdx).trim(),
+        sender: rest.slice(0, colonIdx).trim().replace(/^~/, ""),
         content: rest.slice(colonIdx + 2).trim(),
       };
     } else if (current) {
