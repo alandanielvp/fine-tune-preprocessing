@@ -62,6 +62,8 @@ function convertSingleChat(text: string, options: ConvertOptions): Sample[] {
     /this message was deleted/i,
     /los mensajes y las llamadas están cifrados de extremo a extremo/i,
     /messages and calls are end-to-end encrypted/i,
+    /es un contacto\.?$/i,
+    /is a contact\.?$/i,
   ];
 
   // Strip BOM and zero-width / left-to-right mark characters
