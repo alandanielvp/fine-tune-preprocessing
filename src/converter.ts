@@ -119,14 +119,12 @@ function convertSingleChat(text: string, options: ConvertOptions): Sample[] {
 
   // Build output: system prompt + messages with weight on assistant turns
   const messages: Message[] = [];
-  if (systemPrompt)
-    messages.push({ role: "system", content: systemPrompt, weight: 0 });
+  if (systemPrompt) messages.push({ role: "system", content: systemPrompt });
   for (const m of withRoles) {
-    const entry: Message = {
-      role: m.role,
-      content: m.content,
-      weight: m.role === "assistant" ? 1 : 0,
-    };
+    const entry: Message =
+      m.role === "assistant"
+        ? { role: m.role, content: m.content, weight: 1 }
+        : { role: m.role, content: m.content };
     messages.push(entry);
   }
 
